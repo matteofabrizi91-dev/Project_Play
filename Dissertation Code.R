@@ -1,4 +1,4 @@
-
+##########################################################################################
 
 ##########################################################################################
 #               LOGISTIC REGRESSION 
@@ -976,7 +976,7 @@ summary(log_reg_nonlinear)
 # We now want to know which predictors to include in the final model.
 # To do this, we run models which include diff number of vars 
 # and then we compare them one by one with the baseline model = log_reg_nonlinear
-# (# “Does log_freq matter at all?”)
+# (# “Does log_freq matter at all?”) 
 
 
 # model_no_logfreq = model without log-freq
