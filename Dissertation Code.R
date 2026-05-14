@@ -1425,7 +1425,7 @@ ggsave(
 # Get actual quantiles
 log_freq_vals <- quantile(
   context_leverage_scale$log_freq,
-  probs = c(0.25, 0.5, 0.75),
+  probs = c(0.25, 0.75),
   na.rm = TRUE
 )
 
@@ -1444,7 +1444,7 @@ p_log_freq <- plot(plot_log_freq) +
     labels = scales::number_format(accuracy = 0.01)
   ) +
   scale_colour_discrete(
-    labels = c("Low", "Median", "High"),
+    labels = c("Low", "High"),
     guide = guide_legend(reverse = TRUE)
   ) +
   labs(
@@ -1470,7 +1470,7 @@ ggsave(
 # Get actual quantiles
 utt_vals <- quantile(
   context_leverage_scale$utt_length,
-  probs = c(0.25, 0.5, 0.75),
+  probs = c(0.25, 0.75),
   na.rm = TRUE
 )
 
@@ -1489,7 +1489,7 @@ p_utt_length <- plot(plot_utt_length) +
     labels = scales::number_format(accuracy = 0.01)
   ) +
   scale_colour_discrete(
-    labels = c("Short", "Median", "Long"),
+    labels = c("Short", "Long"),
     guide = guide_legend(reverse = TRUE)
   ) +
   labs(
@@ -1515,7 +1515,7 @@ ggsave(
 # Get actual quantiles
 abcon_vals <- quantile(
   context_leverage_scale$abcon,
-  probs = c(0.25, 0.5, 0.75),
+  probs = c(0.25, 0.75),
   na.rm = TRUE
 )
 
@@ -1534,7 +1534,7 @@ p_abcon <- plot(plot_abcon) +
     labels = scales::number_format(accuracy = 0.01)
   ) +
   scale_colour_discrete(
-    labels = c("Low", "Median", "High"),
+    labels = c("Low", "High"),
     guide = guide_legend(reverse = TRUE)
   ) +
   labs(
@@ -1562,7 +1562,7 @@ ggsave(
 # Get actual quantiles
 prop_vals <- quantile(
   context_leverage_scale$prop_same,
-  probs = c(0.25, 0.5, 0.75),
+  probs = c(0.25, 0.75),
   na.rm = TRUE
 )
 
@@ -1581,7 +1581,7 @@ p_prop_same <- plot(plot_prop_same) +
     labels = scales::number_format(accuracy = 0.01)
   ) +
   scale_colour_discrete(
-    labels = c("Low", "Median", "High"),
+    labels = c("Low", "High"),
     guide = guide_legend(reverse = TRUE)
   ) +
   labs(
@@ -1627,7 +1627,7 @@ p_within_overlap <- plot(plot_within_overlap) +
     labels = scales::number_format(accuracy = 0.01)
   ) +
   scale_colour_manual(
-    values = c("#F8766D", "#619CFF"),  # Low = red, High = blue
+    values = c("#F8766D", "#00BFC4"),  # Low = red, High = blue
     labels = c("Low", "High"),
     guide = guide_legend(reverse = TRUE)  # 👈 this flips legend order
   ) +
@@ -1648,7 +1648,9 @@ ggsave(
   dpi = 300
 )
 
-### Multipanel showing all the graphs with predictors that have interaction with age 
+
+
+### 8. Multipanel showing all the graphs with predictors that have interaction with age 
 
 # --- Update titles (cleaner, shorter) ---
 p_log_freq <- p_log_freq +
