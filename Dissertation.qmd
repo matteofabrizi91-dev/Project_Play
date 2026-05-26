@@ -1,0 +1,139 @@
+---
+title: "Dissertation"
+author: "Dissertation"
+date: last-modified
+date-format: "D MMMM YYYY"
+format:
+  html:
+    toc: true
+    df-print: paged
+    page-layout: full
+    self-contained: true
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: false
+  cache: false
+---
+
+# Abstract
+
+# Leveraging Word Knowledge from Everyday Language
+
+# Language Characteristics that Contribute to Word Learning
+
+# Learning Words from the Company they Keep?
+
+# Present Study
+
+# Methods
+
+## Word Learning Outcome: Age of Acquisition
+
+## Corpus of Children’s Everyday Language
+
+## Context Leverage Metrics
+
+## Calculating Context Similarity: Context Overlap
+
+## CalculatingContextLeverage
+
+## Control Variables
+
+
+
+
+
+
+
+
+
+
+
+# Results
+
+## Standardise numeric predictors (z-scores)
+
+
+WHY
+
+
+HOW
+
+
+RESULTS 
+
+
+## JUSTIFY MIXED EFFECTS MODELS
+
+
+WHY
+
+
+HOW
+
+
+RESULTS
+
+
+## JUSTIFY WHICH VARIABLES INCLUDE (MAIN EFFECT)
+
+
+WHY
+
+
+HOW
+
+
+RESULTS
+
+   
+## JUSTIFY WHICH VARIABLES WITH INTERACTION WITH AGE TO INCLUDE (INTERACTION)
+
+
+WHY
+
+
+HOW
+
+
+RESULTS
+
+  
+## JUSTIFY COMBINATION OF INTERACTIONS
+
+
+WHY
+
+
+HOW
+
+
+RESULTS
+
+
+
+## RESULTS FINAL MODEL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# General Discussion
+
+# Conclusion
+
