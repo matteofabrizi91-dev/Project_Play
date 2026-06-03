@@ -815,7 +815,38 @@ overlap_within <- overlap_aoa %>%
 # MERGING context leverage (overlap_within) WITH LONGITUDINAL DATA (mcdi_aoa)
 context_leverage <- left_join(mcdi_aoa, overlap_within, by = "word")
 
+summary(context_leverage)
+
 context_leverage <- select(context_leverage, -word_raw, -word_homonym, -aoa)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ###############################################
@@ -850,6 +881,8 @@ context_leverage_scale <- context_leverage_scale[complete.cases(context_leverage
 # sanity check 
 nrow(context_leverage_scale)
 
+# descriptive stats each var
+summary(context_leverage_scale)
 
 ###############################################
 ########### STATS BEGINNING ###################
@@ -941,7 +974,7 @@ anova(mixed_log_reg, mixed_log_reg_nonlinear, test = "Chisq")
 ######    COUNFOUNDING VARS        ############ 
 ###############################################
 
-# Now we need to decide what variables to include in our logistic regression model
+# Now we need to decide which variables to include in our logistic regression model
 
 # Fit model predicting AoA from context overlap leverage and control variables
 # Baseline model = log_reg_nonlinear
@@ -1073,6 +1106,36 @@ anova(model_no_overlap, log_reg_nonlinear, test = "Chisq")
 # Pr(>Chisq) = 0.0001236
 # → Full model has lower AIC and significantly better fit (p < .001); retain within_overlap
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################    REMOVE THIS SECTION ###############################################
 
 
 ###############################################
@@ -1210,11 +1273,39 @@ anova(log_reg_nonlinear, model_int_prop, test = "Chisq")
 # → Interaction model has lower AIC and significantly better fit (p < .001); retain age × prop_same
 
 
+
+
+################    REMOVE THIS SECTION ABOVE ###############################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ###############################################
 ###### JUSTIFY COMBINATION OF INTERACTIONS ####
 ###############################################
 
-# We now buil a fill interaction model and compare it with models 
+# We now build and fill interaction model and compare it with models 
 # having removed one interaction at time and see which is the better fit
 # It is like a gioco ad eliminazione diretta.
 
@@ -1706,8 +1797,6 @@ ggsave(
   height = 6,
   dpi = 300
 )
-
-
 
 
 #########################
