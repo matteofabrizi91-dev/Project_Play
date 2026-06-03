@@ -5,17 +5,64 @@ date: last-modified
 date-format: "D MMMM YYYY"
 format:
   html:
-    toc: true
+    toc: false
     df-print: paged
     page-layout: full
     self-contained: true
 execute:
-  echo: true
+  echo: false
   warning: false
   message: false
   freeze: false
   cache: false
 ---
+
+# CODE FOR WORD COUNT
+# save the file before running this chunk
+```{r}
+
+# CODE FOR WORD COUNT
+# save the file before running this chunk
+
+
+text <- readLines("Dissertation.qmd", warn = FALSE)
+
+# Remove YAML header
+if (text[1] == "---") {
+  end_yaml <- which(text == "---")[2]
+  text <- text[-(1:end_yaml)]
+}
+
+# Remove code chunks
+inside_chunk <- FALSE
+clean_text <- character()
+
+for (line in text) {
+  if (grepl("^```", line)) {
+    inside_chunk <- !inside_chunk
+    next
+  }
+
+  if (!inside_chunk) {
+    clean_text <- c(clean_text, line)
+  }
+}
+
+# Count words
+words <- unlist(strsplit(paste(clean_text, collapse = " "), "\\s+"))
+words <- words[words != ""]
+
+cat("Word count:", length(words), "\n")
+```
+
+
+```{r}
+
+# Load packages 
+
+library(knitr)
+
+```
 
 # Abstract
 
@@ -51,83 +98,298 @@ execute:
 
 
 
+
+
+
+
+##########   retrieve models from folder 
+
+```{r}
+#| warning: false
+#| message: false
+#| fig-width: 10
+#| fig-height: 8
+
+p_log_freq <- readRDS("models/mixed_log_reg.rds")
+
+```
+
+
+
+
+
+
 # Results
 
 ## Standardise numeric predictors (z-scores)
 
-
-WHY
-
-
-HOW
+### Why
+Prior to statistical modelling, continuous predictor variables (log_freq, log_freq_final, utt_length, abcon, prop_same, and within_overlap) were standardised using z-score transformation. Standardisation placed predictors on a common scale, facilitating comparison of coefficient estimates across variables and improving model estimation.
 
 
-RESULTS 
+### TABLE FINAL DATA SET 
+```{r}
+
+### View final data set
+context_leverage_scale <- readRDS(
+  "final dataset/context_leverage_scale.rds"
+)
+context_leverage_scale
+```
+
+
+### How
+Following standardisation, only variables required for subsequent analyses were retained. Observations containing missing values were then removed so that all statistical models were fitted to a consistent dataset.
+
 
 
 ## JUSTIFY MIXED EFFECTS MODELS
 
-
-WHY
-
-
-HOW
+### Why
+The dataset contained repeated observations for both children and words, violating the assumption of independence required by standard logistic regression. Mixed-effects models were therefore evaluated to determine whether accounting for child- and word-level variability improved model fit.
 
 
-RESULTS
+### How
+To evaluate whether this, two logistic regression models were compared. The first was a standard logistic regression model including age as a fixed predictor of vocabulary acquisition probability. The second was a mixed-effects logistic regression model that additionally included random intercepts for both word and child identity, allowing baseline vocabulary acquisition probability to vary across children and lexical items.
+Model fit was compared using Akaike’s Information Criterion (AIC), with lower AIC values indicating better fit.
+
+
+### TABLE
+```{r}
+#| message: false
+#| warning: false
+
+# Table comparison: Standard logistic regression / Mixed-effects logistic regression
+
+aic_table <- data.frame(
+  Model = c("Standard logistic regression",
+            "Mixed-effects logistic regression"),
+  df = c(2, 4),
+  AIC = c(174471.04, 99536.73)
+)
+
+kable(
+  aic_table,
+  caption = "Comparison of model fit between standard logistic and mixed-effects logistic regression models."
+)
+```
+
+
+### Results
+The mixed-effects model provided a substantially better fit than the standard logistic regression model (Table X). Consequently, random intercepts for word and child identity were retained in all subsequent analyses.
+
+
+
+
+## JUSTIFY AGE AS NON LINEAR PREDICTOR
+
+### Why
+Vocabulary acquisition is unlikely to progress at a constant rate across age. Periods of rapid vocabulary growth may be followed by slower developmental change, meaning that the relationship between age and acquisition probability may not be linear. Therefore, it was necessary to determine whether age should be modelled as a linear or non-linear predictor. A non-linear representation allows developmental changes in acquisition probability to be captured more flexibly and may provide a better fit to the data.
+
+
+### How
+To evaluate this, two mixed-effects logistic regression models were compared. Both models retained random intercepts for word and child identity, but the first model used age as a linear predictor whether the other model used age as a non-linear predictor, allowing the relationship between age and word acquisition probability to vary non-linearly.
+The two models were compared AIC values. 
+
+
+### TABLE 
+```{r}
+#| result: true
+
+# Table comparison: Linear age / Non-linear age
+
+age_model_comparison <- data.frame(
+  Model = c("Linear age", "Non-linear age"),
+  Parameters = c(4, 6),
+  AIC = c(99537, 98236),
+  LogLik = c(-49764, -49112),
+  ChiSq = c(NA, 1304.9),
+  Df = c(NA, 2),
+  p = c(NA, "< .001")
+)
+
+kable(
+  age_model_comparison,
+  caption = "Comparison of linear and non-linear age models."
+)
+```
+
+
+### Results
+The non-linear age model provided a significantly better fit than the linear age model, as indicated by its lower AIC value and the significant likelihood ratio test (Table X). These results suggest that vocabulary acquisition follows a non-linear developmental trajectory rather than progressing at a constant rate across age. Consequently, the non-linear age model was retained for all subsequent analyses.
 
 
 ## JUSTIFY WHICH VARIABLES INCLUDE (MAIN EFFECT)
 
 
-WHY
+### Why
+The next step was to determine which predictor variables should be retained as main effects in the model. The predictors considered were word frequency (log_freq), utterance length (utt_length), concreteness (abcon), proportion of same-category words (prop_same), and context leverage (within_overlap). Although all predictors were theoretically motivated, some may provide little additional explanatory information once the effects of the other predictors are taken into account. This analysis identified the predictors that contributed uniquely to explaining variation in word acquisition probability while avoiding unnecessary model complexity.
+
+### How
+A baseline mixed-effects logistic regression model was first fitted including all predictor variables alongside the non-linear representation of age. Random intercepts for word and child identity were retained.
+A series of reduced models was then created by removing one predictor at a time from the baseline model. Each reduced model was compared against the baseline model using AIC values. Predictors were retained if their removal worsened model fit.
 
 
-HOW
+### TABLE 
+```{r}
+#| result: false
+
+# Table comparison: all vars comparison
+
+main_effect_table <- data.frame(
+  Removed_predictor = c(
+    "log_freq",
+    "utt_length",
+    "abcon",
+    "prop_same",
+    "within_overlap"
+  ),
+  Reduced_model_AIC = c(
+    75495,
+    75486,
+    75508,
+    75411,
+    75414
+  ),
+  Full_model_AIC = c(
+    75402,
+    75402,
+    75402,
+    75402,
+    75402
+  ),
+  ChiSq = c(
+    94.96,
+    85.98,
+    108.15,
+    11.03,
+    14.74
+  ),
+  Df = c(1, 1, 1, 1, 1),
+  p = c(
+    "< .001",
+    "< .001",
+    "< .001",
+    "< .001",
+    "< .001"
+  )
+)
+
+kable(
+  main_effect_table,
+  caption = "Model comparisons testing the contribution of each main-effect predictor."
+)
+```
 
 
-RESULTS
+### Results
+Comparison of the reduced models against the baseline model showed that removing any predictor worsened model fit, as indicated by its lower AIC value and the significant likelihood ratio test (Table X). These results indicate that word frequency, utterance length, concreteness, proportion of same-category words, and context leverage each contributed unique explanatory information about word acquisition probability. Consequently, all predictors were retained as main effects for the subsequent interaction analyses.
 
-   
+
+
 ## JUSTIFY WHICH VARIABLES WITH INTERACTION WITH AGE TO INCLUDE (INTERACTION)
 
+All interactions were first tested one at a time to determine whether the effect of each predictor changed across development. However, interactions that improve model fit when tested individually may not remain important when included together in the same model. Therefore, all interactions were carried forward into a full interaction model, which was used in the following section to identify the combination of interactions that provided the best fit to the data.
 
-WHY
-
-
-HOW
-
-
-RESULTS
-
-  
 ## JUSTIFY COMBINATION OF INTERACTIONS
 
-
-WHY
-
-
-HOW
+### WHY
+The previous analyses showed that all interactions improved model fit when tested individually. The next step was to determine which interactions should be retained when considered together in the same model. This allowed identification of the combination of interactions that best explained developmental variation in word acquisition while avoiding unnecessary model complexity.
 
 
-RESULTS
+### HOW
+A full mixed-effects model was fitted including all previously retained interactions, alongside non-linear age effects and random intercepts for word and child identity.
+
+Reduced models were then created by removing one interaction at a time. Each reduced model was compared with the full model using AIC values. Interactions were retained if their removal worsened model fit.
+
+### TABLE
+```{r}
+#| message: false
+#| warning: false
+
+library(knitr)
+
+interaction_table <- data.frame(
+  Removed_interaction = c(
+    "Age × log_freq",
+    "Age × utt_length",
+    "Age × abcon",
+    "Age × prop_same",
+    "Age × within_overlap"
+  ),
+  Reduced_model_AIC = c(
+    75349,
+    75342,
+    75321,
+    75324,
+    75313
+  ),
+  Full_model_AIC = c(
+    75313,
+    75313,
+    75313,
+    75313,
+    75313
+  ),
+  ChiSq = c(
+    42.167,
+    35.388,
+    14.139,
+    16.618,
+    6.170
+  ),
+  Df = c(3, 3, 3, 3, 3),
+  p = c(
+    "< .001",
+    "< .001",
+    .003,
+    "< .001",
+    .104
+  )
+)
+
+kable(
+  interaction_table,
+  digits = 3,
+  caption = "Model comparisons evaluating the contribution of age interactions."
+)
+```
+
+
+### RESULTS
+Comparison of the full interaction model with the main-effects model showed that including interactions improved model fit (Table X), indicating that the effects of some predictors varied across development.
+Subsequent model comparisons showed that the interactions involving log_freq, utt_length, abcon, and prop_same each contributed uniquely to model fit and were therefore retained. In contrast, the interaction between age and within_overlap did not improve model fit and was removed from the model.
+Consequently, the final model retained interactions between age and log_freq, utt_length, abcon, and prop_same, while within_overlap was retained only as a main effect.
 
 
 
 ## RESULTS FINAL MODEL
 
 
+####### retrieve figures from folder 
+
+```{r}
+#| out-width: "60%"
+#| fig-cap: "Figure X. Predicted probability of word acquisition across age as a function of key lexical and contextual predictors. Each panel shows model-predicted probabilities of word acquisition between 16 and 30 months derived from the final mixed-effects logistic regression model. The x-axis represents age in months and the y-axis represents the predicted probability of acquisition. Coloured lines compare low (25th percentile) and high (75th percentile) values of each predictor."
 
 
+# Figures 
 
+knitr::include_graphics("figures/multi_panel_plot.png")
+```
+Figure X illustrates the patterns of word learning over time predicted by the final model. Across all panels, the probability of word acquisition increased with age, reflecting the overall growth of children's vocabularies between 16 and 30 months.
 
+The effect of word frequency varied across development. High-frequency words were consistently associated with a greater probability of acquisition than low-frequency words, but the size of this advantage changed across age. This finding suggests that the contribution of frequency to word learning is not constant throughout development.
 
+A similar pattern was observed for utterance length. Words occurring in shorter utterances showed a higher probability of acquisition than words occurring in longer utterances, and the magnitude of this difference varied across age. This suggests that simpler linguistic input may be particularly beneficial during certain stages of vocabulary development.
 
+Concreteness showed the largest difference between developmental trajectories. More concrete words were consistently associated with a greater probability of acquisition than more abstract words, although the strength of this effect also changed across development. This finding indicates that words referring to objects and concepts that children can readily perceive are acquired more easily than abstract words.
 
+Semantic similarity also varied across development. Words that were more semantically similar to already known words showed a slightly greater probability of acquisition, suggesting that existing semantic knowledge may support the learning of new words. Although this effect was smaller than those observed for frequency and concreteness, it nevertheless contributed to vocabulary development.
 
+In contrast, words with higher context overlap were associated with a consistently greater probability of acquisition across the entire age range. Model comparisons did not support an interaction between context overlap and age, suggesting that the influence of context overlap remained relatively stable across development.
 
-
-
+Taken together, these findings indicate that word frequency, utterance length, concreteness, semantic similarity, and context overlap all contribute to children's word acquisition. However, the influence of frequency, utterance length, concreteness, and semantic similarity changed across development, whereas the effect of context overlap remained relatively stable across age.
 
 
 
@@ -136,4 +398,3 @@ RESULTS
 # General Discussion
 
 # Conclusion
-
