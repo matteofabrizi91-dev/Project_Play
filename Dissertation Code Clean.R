@@ -953,49 +953,7 @@ anova(model_no_overlap, log_reg_nonlinear, test = "Chisq")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-################    REMOVE THIS SECTION ###############################################
+################    THIS BELOW IS REDUCED IN NARRATIVE ####################################
 
 
 ###############################################
@@ -1135,50 +1093,7 @@ anova(log_reg_nonlinear, model_int_prop, test = "Chisq")
 
 
 
-################    REMOVE THIS SECTION ABOVE ###############################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+################    THIS ABOVE IS REDUCED IN NARRATIVE ###################################
 
 
 
@@ -1562,7 +1477,7 @@ p_prop_same <- plot(plot_prop_same) +
     title = "Predicted probability across age by same-category proportion",
     x = "Age",
     y = "Predicted probability",
-    colour = "same-category"
+    colour = "semantic similarity"
   )
 
 p_prop_same
@@ -1637,7 +1552,7 @@ p_abcon <- p_abcon +
   labs(title = "Across age by concreteness")
 
 p_prop_same <- p_prop_same +
-  labs(title = "Across age by same-category proportion")
+  labs(title = "Across age by semantic semilarity")
 
 p_within_overlap <- p_within_overlap +
   labs(title = "Across age by context overlap")

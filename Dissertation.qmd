@@ -74,17 +74,134 @@ library(knitr)
 
 # Present Study
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Methods
+
+
+## Datasets / Variables
+
+The present study combined longitudinal vocabulary data, lexical predictor measures, and caregiver speech corpora to investigate factors associated with children's word acquisition. Six datasets were used to construct the final analytic dataset.
+
+### mcdi_aoa
+The primary dataset was mcdi_aoa, a longitudinal vocabulary dataset derived from the MacArthur-Bates Communicative Development Inventories (MBCDI). Each row represented a child–age–word observation, indicating whether a particular child was reported to produce a given word at a specific age. The dataset included child identity (child_id), age in months (age), and a binary outcome variable (value), where 1 indicated that the child acquired the word and 0 indicated that the child did not. Rather than looking only at when words were learned on average, this study kept data for each individual child, making it possible to track vocabulary growth over time between 16 and 30 months of age.
+
+### abcon
+The abcon dataset provided word-level concreteness ratings. Concreteness reflects the extent to which a word refers to perceptible objects, actions, or experiences. Higher scores indicate more concrete words, whereas lower scores indicate more abstract words. These ratings were used as a control predictor in the statistical analyses.
+
+### utt_stats
+The utt_stats dataset contained word-level measures calculated from caregiver speech transcripts. These measures describe the linguistic contexts in which words typically occur during child-directed speech. Two measures were used in the present study: mean utterance length (utt_length), representing the average length of utterances in which a word occurred, and utterance-final frequency (log_freq_final), representing how often a word occurred in utterance-final position. These measures were included as control predictors because utterance characteristics may influence word learning.
+
+### childes_text
+The childes_text dataset consisted of transcripts of caregiver speech obtained from the CHILDES corpus. Each row represented a transcript associated with a particular child age. This corpus served as the input language environment from which measures of word frequency, co-occurrence, contextual similarity, and context leverage were derived.
+
+### childes_freq
+The childes_freq dataset contained word frequency information calculated from the CHILDES corpus. For each word, the dataset provided raw frequency counts and log-transformed frequency values (log_freq). Word frequency was included as a control predictor because frequent words are typically acquired earlier than infrequent words.
+
+### categories_raw
+The categories_raw dataset contained semantic category labels for words. Each word was assigned to a broad semantic category and, where relevant, a more specific subcategory. These category labels were used to determine whether pairs of words belonged to the same or different semantic categories. This information was required for the calculation of semantic similarity (prop_same) and context leverage (within_overlap).
+
+
+
+## Data Preparation
+
+Prior to analysis, the CHILDES caregiver speech corpus was preprocessed to create a standardised representation of the language environment available to children. These preprocessing steps were designed to improve consistency across transcripts and ensure reliable calculation of frequency and contextual measures.
+
+First, proper names were identified using the CHILDES Names dataset and replaced with a generic token (pname). This prevented individual names from inflating frequency counts or distorting patterns of word co-occurrence, while also protecting the privacy of children and caregivers.
+
+Second, contractions were expanded to their full forms (e.g., I'll → I will). Words were then lemmatised so that morphological variants were represented by a single base form (e.g., dogs and dog; walking and walk). This meant that different versions of the same word were treated as one word, making it easier to calculate word frequencies and patterns of words appearing together.
+
+Finally, word frequencies were calculated from the cleaned corpus. Low-frequency words were grouped into a single unknown-word category (UNK) using a frequency cutoff procedure. This reduced the number of rare words in the dataset in the co-occurrence data and increased the reliability of subsequent contextual similarity measures.
+The resulting preprocessed corpus served as the basis for the calculation of word frequency, co-occurrence statistics, semantic similarity, and context leverage measures.
+
+
+## Construction of Context Leverage
+
+Context leverage was designed to capture the extent to which a target word occurs in contexts that are similar to those of earlier-learned words with related meanings. The underlying assumption is that word learning may be facilitated when a new word appears in contexts that resemble those of words that are already known. The measure was calculated in several stages involving semantic category matching, co-occurrence analysis, contextual similarity, and age-of-acquisition information.
+
+### Semantic Category Matching and Word-Pair Generation
+Semantic category information was obtained from the categories_raw dataset. All possible word pairs were generated and classified according to whether the two words belonged to the same semantic category or different semantic categories. To make sure contextual similarity could be measured from the perspective of each word, both orders of every pair were included (e.g., in dog–cat the word focus is dog, and in cat–dog the word focus is cat). In cases where a pair could be be classified as both same-category and different-category because a word belonged to multiple categories (e.g., orange–apple the category is the same when the meaning of orange is orange fruit, and different category when the meaning is the orange colour), the pair was classified as same-category whenever the two words shared at least one semantic category. This decision ensured that semantically related words were not excluded simply because one of the words also belonged to another category, allowing any meaningful semantic relationship between the pair to be retained in the analysis.
+
+### Context Windows and Co-occurrence Counts
+The CHILDES corpus was divided into overlapping windows of 11 words, meaning that each window contained a sequence of 11 consecutive words from the corpus. Words were considered to co-occur when they appeared within the same window. Co-occurrence frequencies were then calculated for all word pairs. For example, words such as dog and bark frequently appeared within the same local contexts and therefore received high co-occurrence counts, whereas unrelated words such as dog and spoon tended to receive lower counts.
+
+### Positive Pointwise Mutual Information (PPMI)
+Raw co-occurrence counts are strongly influenced by overall word frequency, meaning that highly frequent words may appear to co-occur with many other words simply by chance. To address this issue, Positive Pointwise Mutual Information (PPMI) was calculated for each pair of words. PPMI measures how strongly two words are associated by comparing how often they occur together with how often they would be expected to occur together by chance. As a result, meaningful associations such as dog–bark receive high PPMI values, whereas associations driven primarily by word frequency receive lower values (e.g., the–dog). This procedure reduces the influence of extremely common words and highlights informative contextual relationships.
+
+### Context Overlap
+For each word, the 100 words with the highest PPMI values were selected as its contextual neighbours. These are the words most strongly associated with the target word in the corpus after accounting for overall word frequency confounding. For example, a word such as dog might have contextual neighbours including bark, puppy, and leash, whereas a word such as spoon might be associated with words such as bowl, eat, and fork. The set of 100 highest-ranking neighbours was treated as the word's context. Context overlap between two words was then calculated using the Jaccard Index, which measures how many context words the two words share compared with the total number of context words they have altogether. For example, if two words have many of the same contextual neighbours, their Jaccard Index will be higher. If they share very few neighbours, their Jaccard Index will be lower. Higher Jaccard values indicate greater similarity between the contexts in which two words occur.
+
+### Context Leverage
+To calculate context leverage, context overlap scores were combined with semantic category information and age-of-acquisition estimates. For each target word, only words acquired earlier in development were considered. The mean context overlap between the target word and earlier-learned words from the same semantic category was calculated, as was the mean context overlap between the target word and earlier-learned words from different semantic categories.
+
+Context leverage (within_overlap) was then calculated as the difference between these two averages. Positive values indicate that a target word occurs in contexts that are more similar to those of earlier-learned semantically related words than to those of earlier-learned semantically unrelated words. Larger values therefore reflect greater context leverage support for word learning.
+
+
+## Construction of Meaning Leverage
+
+Meaning leverage was designed to capture the extent to which a target word was surrounded by earlier-learned words from the same semantic category. For example, if the target word was *banana*, earlier-learned words such as *apple*, *orange*, and *grape* would contribute to its meaning leverage because they belong to the same semantic category (fruit). This measure was included as a control variable to account for the possibility that some words may be easier to learn simply because they have more semantically related neighbours that are already known.
+
+For each target word, all words acquired earlier in development were first identified using age-of-acquisition estimates. The number of earlier-learned words belonging to the same semantic category as the target word was then counted and divided by the total number of earlier-learned words, producing the proportion of previously acquired words from the same category. For example, if a target word belonged to the animal category and a child had already acquired 100 words, of which 15 were animals, the resulting proportion would be 15/100 = 0.15.
+
+Meaning leverage (`prop_same`) was calculated as the proportion of a word’s earlier-learned semantic neighbours that belonged to the same semantic category as the target word.
+
+The resulting proportion was log-transformed to reduce skewness and limit the influence of extreme values. A small constant (0.0001) was added before the transformation because the logarithm of zero is undefined, ensuring that words with no earlier-learned neighbours from the same semantic category could still be assigned a valid value and retained in the analysis.
+
+Higher values of `prop_same` indicate that a larger proportion of previously acquired words belong to the same semantic category as the target word. Including this measure allowed the analyses to distinguish the effect of context leverage from the simpler possibility that words are learned earlier because they have more semantically related neighbours available in the developing vocabulary.
+
+
+## Final Dataset
+
+## Final Dataset
+
+Following the construction of the predictor variables, all measures were merged with the longitudinal vocabulary dataset (`mcdi_aoa`) using the standardised word forms as matching keys. This procedure produced a single dataset containing child-level vocabulary observations together with lexical and contextual predictors for each word.
+
+The final dataset included the binary word acquisition outcome (`value`), age in months (`age`), child identity (`child_id`), and word identity (`word`). It also contained the main predictor of interest, context leverage (`within_overlap`), which quantified the extent to which a target word occurred in contexts similar to those of earlier-learned semantically related words.
+
+Several control variables were included to account for alternative factors known to influence word learning. These were word frequency (`log_freq`), utterance length (`utt_length`), concreteness (`abcon`), and meaning leverage (`prop_same`). Including these variables allowed the contribution of context leverage to be evaluated while controlling for established predictors of vocabulary acquisition.
+
+
+
+
+
+
+
+
+
+
 
 ## Word Learning Outcome: Age of Acquisition
 
+
 ## Corpus of Children’s Everyday Language
+
 
 ## Context Leverage Metrics
 
+
 ## Calculating Context Similarity: Context Overlap
 
+
 ## CalculatingContextLeverage
+
 
 ## Control Variables
 
