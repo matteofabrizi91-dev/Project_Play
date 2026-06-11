@@ -17,6 +17,7 @@ execute:
   cache: false
 ---
 
+
 # CODE FOR WORD COUNT
 # save the file before running this chunk
 ```{r}
@@ -61,7 +62,9 @@ cat("Word count:", length(words), "\n")
 # Load packages 
 
 library(knitr)
-
+library(dplyr)
+library(tidyr)
+library(knitr)
 ```
 
 # Abstract
@@ -80,21 +83,81 @@ library(knitr)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Methods
+
+
+
+
+### DESCRIPTIVE STATS TABLE 
+```{r}
+#| echo: false
+
+# DESCRIPTIVE STATS TABLE for Age of Acquisition dataset
+mcdi_descriptives <- readRDS(
+  "Data/mcdi_descriptive_stats.rds"
+)
+
+mcdi_descriptives %>%
+  pivot_longer(
+    everything(),
+    names_to = "Statistic",
+    values_to = "Value"
+  ) %>%
+  mutate(
+    Statistic = recode(
+      Statistic,
+      observations = "Observations",
+      children = "Children",
+      words = "Words",
+      min_age = "Minimum age (months)",
+      max_age = "Maximum age (months)",
+      mean_age = "Mean age (months)",
+      median_age = "Median age (months)",
+      sd_age = "Age SD",
+      known_words_pct = "Known words (%)"
+    ),
+    Value = case_when(
+      Statistic == "Observations" ~ format(
+        round(as.numeric(Value), 0),
+        big.mark = ",",
+        scientific = FALSE
+      ),
+      Statistic %in% c(
+        "Children",
+        "Words",
+        "Minimum age (months)",
+        "Maximum age (months)"
+      ) ~ as.character(round(as.numeric(Value), 0)),
+      Statistic %in% c(
+        "Mean age (months)",
+        "Median age (months)",
+        "Age SD"
+      ) ~ sprintf("%.1f", as.numeric(Value)),
+      Statistic == "Known words (%)" ~ paste0(
+        sprintf("%.1f", as.numeric(Value)),
+        "%"
+      )
+    )
+  ) %>%
+  kable(
+    col.names = c("Statistic", "Value"),
+    caption = "Descriptive statistics for the longitudinal MCDI dataset."
+  )
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Datasets / Variables
@@ -167,8 +230,6 @@ The resulting proportion was log-transformed to reduce skewness and limit the in
 
 Higher values of `prop_same` indicate that a larger proportion of previously acquired words belong to the same semantic category as the target word. Including this measure allowed the analyses to distinguish the effect of context leverage from the simpler possibility that words are learned earlier because they have more semantically related neighbours available in the developing vocabulary.
 
-
-## Final Dataset
 
 ## Final Dataset
 

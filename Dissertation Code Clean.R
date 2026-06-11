@@ -66,6 +66,30 @@ mcdi_aoa <- mcdi_aoa %>%
 head(mcdi_aoa)
 
 
+# Descriptive statistics
+mcdi_descriptives <- mcdi_aoa %>%
+  summarise(
+    observations = n(),
+    children = n_distinct(child_id),
+    words = n_distinct(word),
+    min_age = min(age, na.rm = TRUE),
+    max_age = max(age, na.rm = TRUE),
+    mean_age = mean(age, na.rm = TRUE),
+    median_age = median(age, na.rm = TRUE),
+    sd_age = sd(age, na.rm = TRUE),
+    known_words_pct = mean(value, na.rm = TRUE) * 100
+  )
+
+# View results
+mcdi_descriptives
+
+# Save as RDS
+saveRDS(
+  mcdi_descriptives,
+  "Data/mcdi_descriptive_stats.rds"
+)
+
+
 
 #####################################################
 ################# LOAD ABCON DATA ###################
