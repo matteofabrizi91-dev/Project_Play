@@ -68,10 +68,10 @@ head(mcdi_aoa)
 
 # Descriptive statistics
 mcdi_descriptives <- mcdi_aoa %>%
-  summarise(
-    observations = n(),
-    children = n_distinct(child_id),
-    words = n_distinct(word),
+  dplyr::summarise(
+    observations = dplyr::n(),
+    children = dplyr::n_distinct(child_id),
+    words = dplyr::n_distinct(word),
     min_age = min(age, na.rm = TRUE),
     max_age = max(age, na.rm = TRUE),
     mean_age = mean(age, na.rm = TRUE),
@@ -686,6 +686,56 @@ context_leverage <- left_join(mcdi_aoa, overlap_within, by = "word")
 summary(context_leverage)
 
 context_leverage <- select(context_leverage, -word_raw, -word_homonym, -aoa)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1364,7 +1414,7 @@ p_log_freq <- plot(plot_log_freq) +
     title = "Predicted probability across age by word frequency",
     x = "Age",
     y = "Predicted probability",
-    colour = "Word frequency"
+    colour = "Word Frequency"
   )
 
 p_log_freq
@@ -1409,7 +1459,7 @@ p_utt_length <- plot(plot_utt_length) +
     title = "Predicted probability across age by utterance length",
     x = "Age",
     y = "Predicted probability",
-    colour = "Utterance length"
+    colour = "Utterance Length"
   )
 
 p_utt_length
@@ -1454,7 +1504,7 @@ p_abcon <- plot(plot_abcon) +
     title = "Predicted probability across age by concreteness level",
     x = "Age",
     y = "Predicted probability",
-    colour = "Concreteness level"
+    colour = "Concreteness Ratings"
   )
 
 p_abcon
@@ -1501,7 +1551,7 @@ p_prop_same <- plot(plot_prop_same) +
     title = "Predicted probability across age by same-category proportion",
     x = "Age",
     y = "Predicted probability",
-    colour = "semantic similarity"
+    colour = "Meaning Leverage"
   )
 
 p_prop_same
@@ -1548,7 +1598,7 @@ p_within_overlap <- plot(plot_within_overlap) +
     title = "Predicted probability across age by context overlap",
     x = "Age",
     y = "Predicted probability",
-    colour = "Context overlap"
+    colour = "Context Leverage"
   )
 
 p_within_overlap
@@ -1567,19 +1617,19 @@ ggsave(
 
 # --- Update titles (cleaner, shorter) ---
 p_log_freq <- p_log_freq +
-  labs(title = "Across age by word frequency")
+  labs(title = "Across age by Word Frequency")
 
 p_utt_length <- p_utt_length +
-  labs(title = "Across age by utterance length")
+  labs(title = "Across age by Utterance Length")
 
 p_abcon <- p_abcon +
-  labs(title = "Across age by concreteness")
+  labs(title = "Across age by Concreteness")
 
 p_prop_same <- p_prop_same +
-  labs(title = "Across age by semantic semilarity")
+  labs(title = "Across age by Meaning Leverage")
 
 p_within_overlap <- p_within_overlap +
-  labs(title = "Across age by context overlap")
+  labs(title = "Across age by Context Leverage")
 
 
 # --- Remove repeated y-axis labels from right-column plots ---
