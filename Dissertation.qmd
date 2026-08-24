@@ -4,11 +4,8 @@ author: "Dissertation"
 date: last-modified
 date-format: "D MMMM YYYY"
 format:
-  html:
+  pdf:
     toc: false
-    df-print: paged
-    page-layout: full
-    self-contained: true
 execute:
   echo: false
   warning: false
@@ -67,23 +64,11 @@ library(tidyr)
 library(knitr)
 ```
 
-# Abstract
-
-# Leveraging Word Knowledge from Everyday Language
-
-# Language Characteristics that Contribute to Word Learning
-
-# Learning Words from the Company they Keep?
-
-# Present Study
+# INTRODUCTION
 
 
 
-
-
-
-
-# Methods
+# METHODS
 
 
 

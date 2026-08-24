@@ -1,0 +1,867 @@
+---
+title: "Context Leverage in Early Word Learning: A Logistic Regression Analysis"
+author: "Y3884968"
+date: last-modified
+date-format: "D MMMM YYYY"
+format:
+  pdf:
+    toc: false
+execute:
+  echo: false
+  warning: false
+  message: false
+  freeze: false
+  cache: false
+---
+
+
+
+
+```{r}
+
+# Load packages 
+
+library(knitr)
+library(dplyr)
+library(tidyr)
+library(knitr)
+```
+
+# INTRODUCTION
+
+How we acquire language is one of the central questions in cognitive science, psychology, and linguistics. During the first years of life, children acquire vocabulary at a remarkable rate, progressing from producing only a few words to developing vocabularies of several thousand words. Although this developmental progression occurs rapidly and reliably across children, the mechanisms that make it possible remain the subject of extensive theoretical debate.
+One of the earliest influential learning-based accounts was proposed by Skinner (1957), who argued that language is acquired through general learning mechanisms such as imitation, reinforcement, and experience. According to this behaviourist perspective, linguistic knowledge emerges gradually through exposure to the language environment.
+
+Skinner's behaviourist account was fundamentally challenged by Chomsky (1965), who argued that the linguistic input available to children is too limited to account for the rapid and uniform acquisition of language through general learning mechanisms alone. This argument, commonly referred to as the poverty of the stimulus, proposes that the linguistic input available to children does not contain sufficient information for language to be learned solely through general learning mechanisms. Chomsky therefore argued that humans are born with an innate Universal Grammar, a language-specific system of knowledge that constrains the range of possible human languages and guides language acquisition. From this perspective, linguistic experience primarily serves to trigger and shape an already existing cognitive capacity for language rather than to construct it from scratch.
+
+## Challenge to Poverty of the Stimulus: The Distributional Hypothesis
+The poverty of the stimulus argument has been questioned by researchers who argue that the linguistic input available to children is substantially richer than originally assumed. From this perspective, language is not viewed as an impoverished source of information but as containing rich statistical regularities, such as patterns of co-occurrence, word order, and the probabilities with which words and structures occur together. If these regularities are sufficiently informative, children may be able to use them to learn about language. This ability is referred to as statistical learning, the capacity to detect and exploit regularities in the input, allowing learners to acquire grammatical and semantic knowledge from everyday language experience. This perspective forms the basis of distributional learning, which proposes that linguistic knowledge emerges through sensitivity to patterns in the language input. Central to this approach is the distributional hypothesis, which states that words occurring in similar linguistic contexts tend to have similar meanings.
+
+The foundations of this perspective were established by Firth (1957), who proposed that the meaning of a word can be inferred from the company it keeps, famously summarised by the phrase "You shall know a word by the company it keeps." According to this view, words that appear in similar linguistic environments are likely to share semantic properties, allowing information about meaning to emerge from patterns of language use. 
+
+Early empirical studies tested this hypothesis by examining the relationship between semantic similarity and patterns of language use.
+
+Rubenstein and Goodenough (1965) examined the relationship between human judgements of semantic similarity and the degree to which words occurred in similar linguistic contexts. They found that words judged to be more similar in meaning also tended to occur in more similar linguistic contexts, providing early empirical support for the distributional hypothesis. Miller and Charles (1991) later replicated the semantic similarity judgements using a refined set of word pairs, confirming the robustness and reliability of these human similarity ratings.
+
+Together, these studies provided empirical support for the central assumption of the distributional hypothesis by demonstrating a close relationship between semantic similarity and linguistic context. Having established that semantic relationships are reflected in patterns of language use, researchers next sought to determine whether these relationships could be learned naturally from linguistic input. The development of computational models helped answer this question as they are capable of constructing semantic representations directly from patterns of word co-occurrence.
+
+## Computational evidence of Distributional learning
+Lund and Burgess (1996) introduced the Hyperspace Analogue to Language (HAL) model, demonstrating that words appearing in similar linguistic contexts develop similar semantic representations based solely on patterns of words occurring together.
+
+Landauer and Dumais (1997) extended this idea through Latent Semantic Analysis (LSA), showing that rich semantic knowledge can emerge automatically from large-scale patterns of word co-occurrence without explicit information about word meanings.
+
+More recently, advances in neural language modelling have provided further evidence for this account. Mikolov et al. (2013) introduced word2vec, demonstrating that neural networks can learn dense semantic representations by predicting surrounding words in text, while Pennington et al. (2014) developed GloVe, showing that global patterns of word co-occurrence also produce meaningful semantic representations.
+
+Together, these computational models demonstrate that semantic representations can emerge directly from statistical regularities in language, providing strong computational support for the distributional learning account.
+
+### Neural networks and Distributional Hypothesis
+Evidence for distributional learning also comes from recurrent neural networks (RNNs), first introduced by Elman (1990) as a computational model capable of learning sequential structure from linguistic input. Unlike earlier computational models that represented semantic relationships using patterns of word co-occurrence, RNNs process language one word at a time while retaining information about previous inputs, allowing them to learn sequential dependencies directly from linguistic experience (Elman, 1990; Pater, 2018). This enables RNNs to progressively acquire semantic word knowledge by detecting statistical regularities in language input.
+
+More recently, Piantadosi (2024) argued that modern large language models provide further evidence for this perspective. Trained to predict the next word from linguistic input, these models develop rich linguistic representations without explicit language-specific rules, demonstrating that complex language knowledge can emerge from statistical structure.
+
+### Overview of Distributional Hypothesis Evidence
+Collectively, these theoretical, empirical, and computational findings suggest that linguistic input may be substantially richer than assumed by strong versions of the poverty of the stimulus argument. Rather than viewing language as an impoverished source of information, distributional approaches propose that learners can exploit statistical regularities in the language they hear to construct increasingly rich semantic representations. The next question, therefore, is whether statistical information in the linguistic input actually drives vocabulary acquisition during development.
+
+
+## Do Children Learn from Regularities in Language Input? 
+
+### Established predictors
+If statistical information in the language that children hear helps them learn words, then these characteristics should predict when words are acquired. Previous research has identified some characteristics of children's everyday language input that reliably predict vocabulary acquisition. These predictors provide evidence that properties of the linguistic input influence word learning.
+
+One of the most consistent predictors is word frequency. Braginsky et al. (2019) analysed vocabulary development across multiple languages and found that words occurring more frequently in children's language environments tend to be acquired earlier than less frequent words. Frequent exposure provides children with more opportunities to encounter individual words, making frequency one of the strongest and most reliable predictors of vocabulary acquisition across languages.
+
+Research has also shown that characteristics of the utterances in which words occur contribute to vocabulary acquisition. Swingley and Humphrey (2018) examined quantitative predictors of early word learning and found that words occurring more frequently and in shorter, less complex utterances tend to be learned earlier. 
+
+These findings suggest that both the amount of exposure children receive and the linguistic environments in which words appear influence the timing of vocabulary acquisition. Together, they demonstrate that characteristics such as word frequency and utterance length explain a substantial proportion of the variation in the age at which words are acquired. However, these characteristics primarily describe how often words occur, or the types of the utterances in which they appear. They provide relatively little information about the meanings of words themselves or how children infer those meanings from language input. Consequently, researchers have increasingly turned their attention to characteristics of linguistic input that are informative about word meaning. One promising proposal is context leverage, which focuses on how relationships between words across similar linguistic contexts may facilitate vocabulary acquisition.
+
+
+### Context leverage
+Context leverage is grounded in the distributional hypothesis. If this principle holds during language acquisition, children may be able to infer the meanings of unfamiliar words by relating them to previously acquired words that occur in similar linguistic environments. For example, if a child has previously heard the familiar words apple and orange [MF1.1]in contexts such as "juicy apple" and "juicy orange", then later hearing the unfamiliar phrase "juicy mango" may allow the child to infer that mango refers to something similar. Rather than learning each word independently, vocabulary growth may therefore be supported by the semantic information provided by known words appearing in similar contexts. This idea forms the basis of context leverage. From this perspective, contextual information becomes an important source of evidence about word meaning, allowing children to use previously acquired linguistic knowledge to interpret unfamiliar words.
+
+#### Experimental Evidence from Human Learners for learning from linguistic context 
+Evidence that children can use contextual information during word learning comes from several experimental studies. 
+
+Yuan et al. (2011) demonstrated that children use familiar verbs to infer the meanings of unfamiliar nouns. For example, if a child knows that words such as apple and orange occur with eat, encountering a novel noun in the same context (e.g., eat the mango) may allow the child to infer that mango refers to something similar.
+
+Similarly, Sullivan and Barner (2016) showed that preschool children can infer novel word meanings from discourse context without direct cues to the intended meaning. For example, after hearing "I'm thirsty. Look! There's a pliff on the table," children inferred that pliff referred to the drink rather than the other available objects.
+
+Ferguson et al. (2018) further demonstrated that toddlers can acquire novel words using linguistic context alone. After hearing "The vep is crying" without a visual referent, 24-month-old children inferred that vep referred to an unfamiliar animal because crying implies an animate subject.
+
+#### Naturalistic evidence for context leverage
+Together, these studies demonstrate that children are capable of exploiting linguistic context to infer the meanings of unfamiliar words. However, most evidence comes from laboratory experiments involving a relatively small number of carefully controlled novel-word learning tasks. Consequently, it remains unclear whether the same principles operate during everyday vocabulary acquisition, where children encounter thousands of words across highly variable linguistic environments. To examine this question, Unger et al. (2025) tested the context leverage hypothesis using naturalistic child-directed speech. They showed that words with greater context leverage tended to be acquired earlier in development, even after accounting for established predictors of Age of Acquisition.
+
+However, although Unger et al. (2024) provided the first evidence that context leverage predicts vocabulary acquisition in naturalistic language input, an important limitation remains. Their analyses summarised vocabulary acquisition using a single Age of Acquisition estimate for each word. Although this approach identifies the approximate age at which a word is learned by the population, it does not show how vocabulary develops differently across children over time.
+
+Vocabulary acquisition is inherently a longitudinal process. Children differ in the words they know at different ages, and new words are acquired gradually throughout development rather than at a single point in time. Consequently, modelling vocabulary acquisition at the level of individual child–word observations may provide a more detailed understanding of the factors that support word learning.
+
+It therefore remains unclear whether context leverage predicts the probability that an individual child knows a particular word at a given age after accounting for other established predictors of vocabulary acquisition.
+
+## Present Study
+The present study addresses this gap by examining whether context leverage predicts longitudinal vocabulary acquisition during early childhood. 
+
+Rather than representing learning using a single Age of Acquisition estimate for each word, vocabulary acquisition was modelled using individual child–age–word observations from a longitudinal dataset in which children's vocabulary development was tracked over 14 months. This approach makes it possible to examine the probability that an individual child knows a particular word at a particular age.
+
+To investigate this question, the present study examined whether context leverage predicts vocabulary acquisition over the course of development, such that words are more likely to be learned when they occur in similar linguistic contexts to previously acquired words with related meanings. The principal predictor of interest was context leverage, while the analyses controlled for word frequency, utterance length, and other key predictors of word learning.
+
+### Hypotheses
+Based on previous theoretical and empirical work, it was hypothesised that words with higher context leverage would have a greater probability of being acquired. Furthermore, this relationship was expected to remain significant after controlling for word frequency, utterance length, and other characteristics known to affect word learning.
+
+
+
+
+
+# METHODS
+
+The present study combined longitudinal vocabulary data, lexical predictor measures, and caregiver speech corpora to investigate factors associated with children's word acquisition. Six datasets were used to construct the final analytic dataset.
+
+## Datasets
+
+### Age of Acquisition
+The primary dataset was the Age of Acquisition dataset, derived from Wordbank (Frank et al., 2017), an open repository of vocabulary data collected using the MacArthur–Bates Communicative Development Inventories (MBCDI) (Fenson et al., 2007). Rather than examining only the average age at which words are acquired, the dataset retained observations for individual children, allowing vocabulary development to be tracked longitudinally across development. Only children with observations at four or more age points were retained. Each row represented a child–age–word observation, indicating whether a particular child produced a given word at a specific age. The dataset included child identity (child_id), [MF2.1]age in months (age), word identity (word), a binary acquisition outcome (value; 1 = acquired, 0 = not acquired), and an estimated age of acquisition for each word (aoa_fit).
+
+
+```{r}
+#| echo: false
+
+# DESCRIPTIVE STATS TABLE for Age of Acquisition dataset
+mcdi_descriptives <- readRDS(
+  "Data/mcdi_descriptive_stats.rds"
+)
+
+mcdi_descriptives %>%
+  pivot_longer(
+    everything(),
+    names_to = "Statistic",
+    values_to = "Value"
+  ) %>%
+  mutate(
+    Statistic = recode(
+      Statistic,
+      observations = "Observations",
+      children = "Children",
+      words = "Words",
+      min_age = "Minimum age (months)",
+      max_age = "Maximum age (months)",
+      mean_age = "Mean age (months)",
+      median_age = "Median age (months)",
+      sd_age = "Age SD",
+      known_words_pct = "Known words (%)"
+    ),
+    Value = case_when(
+      Statistic == "Observations" ~ format(
+        round(as.numeric(Value), 0),
+        big.mark = ",",
+        scientific = FALSE
+      ),
+      Statistic %in% c(
+        "Children",
+        "Words",
+        "Minimum age (months)",
+        "Maximum age (months)"
+      ) ~ as.character(round(as.numeric(Value), 0)),
+      Statistic %in% c(
+        "Mean age (months)",
+        "Median age (months)",
+        "Age SD"
+      ) ~ sprintf("%.1f", as.numeric(Value)),
+      Statistic == "Known words (%)" ~ paste0(
+        sprintf("%.1f", as.numeric(Value)),
+        "%"
+      )
+    )
+  ) %>%
+  kable(
+    col.names = c("Statistic", "Value"),
+    caption = "Descriptive statistics for the longitudinal MCDI dataset."
+  )
+```
+
+
+As shown in Table 1, the final dataset contained 165,462 child–age–word observations from 45 children across 607 words. Observations spanned the age range from 16 to 30 months, and words were reported as acquired in 32.6% of observations. These longitudinal data formed the basis for all subsequent analyses of vocabulary acquisition.
+
+
+### Child Language Input Corpus 
+The Child Language Input Corpus dataset consisted of transcripts of caregiver speech obtained from the CHILDES corpus (MacWhinney, 2000). Each row represented a transcript associated with a particular child age and provided a record of the language environment available to children. This corpus served as the input language source from which measures of word frequency, co-occurrence, contextual similarity, meaning leverage, and context leverage were derived. 
+Prior to analysis, proper names were replaced with a generic token (pname), contractions were expanded (e.g., I'll → I will), and words were lemmatised using the textstem package (Rinker, 2018) so that morphological variants were represented by a single base form. The resulting corpus was used to calculate word frequency, co-occurrence, contextual similarity, meaning leverage, and context leverage.
+
+## Measures
+
+### Context Leverage
+
+#### Construction of Context Leverage
+Context leverage was designed to capture the extent to which a target word occurs in contexts that are similar to those of earlier-learned words with related meanings. The underlying assumption is that word learning may be facilitated when a new word appears in contexts that resemble those of words that are already known. The measure was calculated in several stages involving semantic category matching, co-occurrence analysis, contextual similarity, and age-of-acquisition information.
+
+##### Semantic Category Matching and Word-Pair Generation
+All possible word pairs were generated and classified according to whether the two words belonged to the same semantic category or different semantic categories. In cases where a pair could be be classified as both same-category and different-category because a word belonged to multiple categories (e.g., *orange–apple *the category is the same when the meaning of orange is orange fruit, and different category when the meaning is the orange colour), the pair was classified as same-category whenever the two words shared at least one semantic category. This decision ensured that semantically related words were not excluded simply because one of the words also belonged to another category, allowing any meaningful semantic relationship between the pair to be retained in the analysis.
+
+##### Context Windows and Co-occurrence Counts
+The Child Language Input Corpus was divided into overlapping windows of 11 words, meaning that each window contained a sequence of 11 consecutive words from the corpus. Words were considered to co-occur when they appeared within the same window. Co-occurrence frequencies were then calculated for all word pairs. For example, words such as dog and bark frequently appeared within the same local contexts and therefore received high co-occurrence counts, whereas unrelated words such as dog and spoon tended to receive lower counts.
+
+##### Positive Pointwise Mutual Information (PPMI)
+Raw co-occurrence counts are strongly influenced by overall word frequency, meaning that highly frequent words may appear to co-occur with many other words simply by chance. To address this issue, Positive Pointwise Mutual Information (PPMI) was calculated for each pair of words (Evert, 2008). PPMI measures how strongly two words are associated by comparing how often they occur together with how often they would be expected to occur together by chance. As a result, meaningful associations such as dog–bark receive high PPMI values, whereas associations driven primarily by word frequency receive lower values (e.g., the–dog). This procedure reduces the influence of extremely common words and highlights informative contextual relationships.
+
+##### Context Overlap
+For each word, the 100 words with the highest PPMI values were selected as its contextual neighbours. These are the words most strongly associated with the target word in the corpus after accounting for overall word frequency confounding. For example, a word such as dog might have contextual neighbours including bark, puppy, and leash, whereas a word such as spoon might be associated with words such as bowl, eat, and fork. The set of 100 highest-ranking neighbours was treated as the word's context. Context overlap between two words was then calculated using the Jaccard Index, which measures how many context words the two words share compared with the total number of context words they have altogether. For example, if two words have many of the same contextual neighbours, their Jaccard Index will be higher. If they share very few neighbours, their Jaccard Index will be lower. Higher Jaccard values indicate greater similarity between the contexts in which two words occur.
+
+#### Context Leverage
+To calculate context leverage, context overlap scores were combined with semantic category information and age-of-acquisition estimates. Semantic category information was obtained from the semantic categories dataset, which assigned each word to a broad semantic category and, where relevant, a more specific subcategory. These category labels were used to determine whether words belonged to the same or different semantic categories. For each target word, only words acquired earlier in development were considered. The mean context overlap between the target word and earlier-learned words from the same semantic category was calculated, as was the mean context overlap between the target word and earlier-learned words from different semantic categories.
+Context leverage was then calculated as the difference between these two averages. Positive values indicate that a target word occurs in contexts that are more similar to those of earlier-learned semantically related words than to those of earlier-learned semantically unrelated words. Larger values therefore reflect greater context leverage support for word learning.
+
+
+### Control variables
+To determine whether context leverage predicts vocabulary acquisition independently of other factors known to influence word learning, several established predictors were also included as control variables.
+
+#### Word Concreteness Ratings
+Previous research has shown that concrete words are generally acquired earlier than abstract words (Hills et al., 2010). Because word concreteness is known to influence vocabulary acquisition, it was included as a control predictor in the present study. Word concreteness was measured using the normative concreteness ratings developed by Brysbaert et al. (2014). This database provides concreteness ratings for over 40,000 English words and expressions, indicating the extent to which a word refers to perceptible objects, actions, or experiences. Higher ratings indicate more concrete words, whereas lower ratings indicate more abstract words.
+
+#### Utterance Length
+The utt_stats dataset provided a word-level measure of utterance length, calculated from the Child Language Input Corpus. Utterance length represented the average number of words in the caregiver utterances in which each target word occurred. This measure was included as a control predictor because characteristics of the linguistic environments in which words occur, including utterance length, have previously been shown to predict the timing of vocabulary acquisition (Swingley & Humphrey, 2018).
+
+#### Word Frequency
+The Word Frequency dataset contained word frequency information derived from the cleaned Child Language Input Corpus. Word frequencies were first calculated from the corpus, after which low-frequency words were grouped into a single unknown-word category (UNK) using a frequency cutoff procedure. This reduced the influence of extremely rare words in the co-occurrence data and increased the reliability of subsequent contextual similarity measures.
+For each word, the dataset provided both raw frequency counts and log-transformed frequency values (log_freq). Frequencies were log-transformed to reduce the highly skewed distribution of word counts and limit the influence of extremely frequent words. Word frequency was included as a control predictor because words that occur more frequently in children's language environments are typically acquired earlier than less frequent words.
+
+#### Meaning Leverage
+
+##### Construction of Meaning Leverage
+Meaning leverage was designed to capture the extent to which a target word was surrounded by earlier-learned words from the same semantic category. Previous research has shown that existing semantic knowledge facilitates the recognition and integration of newly learned words, suggesting that words with more previously acquired semantic neighbours may be easier to learn (Borovsky et al., 2016).  For example, if the target word was banana, earlier-learned words such as apple, orange, and grape would contribute to its meaning leverage because they belong to the same semantic category (fruit). This measure was included as a control variable to account for the possibility that some words may be easier to learn simply because they have more semantically related neighbours that are already known.
+
+For each target word, meaning leverage was calculated as the proportion of earlier-learned words belonging to the same semantic category as the target word. The resulting proportion was log-transformed to reduce skewness, with a small constant (0.0001) added to accommodate zero values. Higher values therefore indicate a greater proportion of previously acquired semantically related words. Including this measure allowed the analyses to distinguish the effect of context leverage from the possibility that words are learned earlier because they have more semantically related neighbours available in the developing vocabulary.
+
+
+# RESULTS
+
+## Standardise numeric predictors (z-scores)
+Prior to statistical modelling, continuous predictor variables were standardised using z-score transformation. Standardisation placed predictors on a common scale, facilitating comparison of coefficient estimates across variables and improving model estimation.
+
+```{r}
+
+### View final data set
+context_leverage_scale <- readRDS(
+  "final dataset/context_leverage_scale.rds"
+)
+
+context_leverage_scale %>%
+  head(10) %>%
+  knitr::kable(
+    caption = "Example observations from the final dataset.",
+    digits = 3
+  )
+```
+
+Following standardisation, only variables required for subsequent analyses were retained, including the control predictors Word Frequency, Utterance Length, Word Concreteness Ratings, and Meaning Leverage, as well as the focal predictor Context Leverage. Observations containing missing values were then removed so that all statistical models were fitted to a consistent dataset.
+
+
+## Model Comparison: Fixed vs. Mixed Effects
+The dataset contained repeated observations for both children and words, violating the assumption of independence required by standard logistic regression. Mixed-effects models were therefore evaluated to determine whether accounting for child- and word-level variability improved model fit.
+
+To evaluate whether this, two logistic regression models were compared. The first was a standard logistic regression model including age as a fixed predictor of vocabulary acquisition probability. The second was a mixed-effects logistic regression model that additionally included random intercepts for both word and child identity, allowing baseline vocabulary acquisition probability to vary across children and lexical items.
+Model fit was compared using Akaike’s Information Criterion (AIC), with lower AIC values indicating better fit.
+
+```{r}
+#| message: false
+#| warning: false
+
+# Table comparison: Standard logistic regression / Mixed-effects logistic regression
+
+aic_table <- data.frame(
+  Model = c("Standard logistic regression",
+            "Mixed-effects logistic regression"),
+  df = c(2, 4),
+  AIC = c(174471.04, 99536.73)
+)
+
+kable(
+  aic_table,
+  caption = "Comparison of model fit between standard logistic and mixed-effects logistic regression models."
+)
+```
+
+The mixed-effects model provided a substantially better fit than the standard logistic regression model (Table 3). Consequently, random intercepts for word and child identity were retained in all subsequent analyses.
+
+
+## Age as a Non-Linear Predictor
+Vocabulary acquisition is unlikely to progress at a constant rate across age. Periods of rapid vocabulary growth may be followed by slower developmental change, meaning that the relationship between age and acquisition probability may not be linear. Therefore, it was necessary to determine whether age should be modelled as a linear or non-linear predictor. A non-linear representation allows developmental changes in acquisition probability to be captured more flexibly and may provide a better fit to the data.
+
+To evaluate this, two mixed-effects logistic regression models were compared. Both models retained random intercepts for word and child identity, but the first model used age as a linear predictor whether the other model used age as a non-linear predictor, allowing the relationship between age and word acquisition probability to vary non-linearly.
+The two models were compared AIC values. 
+
+```{r}
+#| result: true
+
+# Table comparison: Linear age / Non-linear age
+
+age_model_comparison <- data.frame(
+  Model = c("Linear age", "Non-linear age"),
+  Parameters = c(4, 6),
+  AIC = c(99537, 98236),
+  LogLik = c(-49764, -49112),
+  ChiSq = c(NA, 1304.9),
+  Df = c(NA, 2),
+  p = c(NA, "< .001")
+)
+
+kable(
+  age_model_comparison,
+  caption = "Comparison of linear and non-linear age models."
+)
+```
+
+The non-linear age model provided a significantly better fit than the linear age model, as indicated by its lower AIC value and the significant likelihood ratio test (Table 4). These results suggest that vocabulary acquisition follows a non-linear developmental trajectory rather than progressing at a constant rate across age. Consequently, the non-linear age model was retained for all subsequent analyses.
+
+
+## Selection of Predictor Variables
+Word Frequency, Utterance Length, Word Concreteness Ratings, Meaning Leverage, and Context Leverage were evaluated to determine whether each contributed uniquely to word acquisition probability.
+
+A baseline mixed-effects logistic regression model was first fitted including all predictor variables alongside the non-linear representation of age. Random intercepts for word and child identity were retained.
+A series of reduced models was then created by removing one predictor at a time from the baseline model. Each reduced model was compared against the baseline model using AIC values. Predictors were retained if their removal worsened model fit.
+
+```{r}
+#| result: false
+
+# Table comparison: all vars comparison
+
+main_effect_table <- data.frame(
+  Removed_predictor = c(
+    "log_freq",
+    "utt_length",
+    "abcon",
+    "prop_same",
+    "within_overlap"
+  ),
+  Reduced_model_AIC = c(
+    75495,
+    75486,
+    75508,
+    75411,
+    75414
+  ),
+  Full_model_AIC = c(
+    75402,
+    75402,
+    75402,
+    75402,
+    75402
+  ),
+  ChiSq = c(
+    94.96,
+    85.98,
+    108.15,
+    11.03,
+    14.74
+  ),
+  Df = c(1, 1, 1, 1, 1),
+  p = c(
+    "< .001",
+    "< .001",
+    "< .001",
+    "< .001",
+    "< .001"
+  )
+)
+
+kable(
+  main_effect_table,
+  caption = "Model comparisons testing the contribution of each main-effect predictor."
+)
+```
+
+Comparison of the reduced models against the baseline model showed that removing any predictor worsened model fit, as indicated by its lower AIC value and the significant likelihood ratio test (Table 5). These results indicate that each predictor contributed unique explanatory information about word acquisition probability. Consequently, all predictors were retained as main effects for the subsequent interaction analyses.
+
+
+## Evaluating Interactions with Age
+All interactions were first tested one at a time to determine whether the effect of each predictor changed across development. However, interactions that improve model fit when tested individually may not remain important when included together in the same model. Therefore, all interactions were carried forward into a full interaction model, which was used in the following section to identify the combination of interactions that provided the best fit to the data.
+
+
+## Evaluating the Combination of Interactions
+The next step was to determine which interactions should be retained when considered together in the same model. This allowed identification of the combination of interactions that best explained developmental variation in word acquisition while avoiding unnecessary model complexity.
+
+A full mixed-effects model was fitted including all previously retained interactions, alongside non-linear age effects and random intercepts for word and child identity.
+Reduced models were then created by removing one interaction at a time. Each reduced model was compared with the full model using AIC values. Interactions were retained if their removal worsened model fit.
+
+```{r}
+#| message: false
+#| warning: false
+
+library(knitr)
+
+interaction_table <- data.frame(
+  Removed_interaction = c(
+    "Age × log_freq",
+    "Age × utt_length",
+    "Age × abcon",
+    "Age × prop_same",
+    "Age × within_overlap"
+  ),
+  Reduced_model_AIC = c(
+    75349,
+    75342,
+    75321,
+    75324,
+    75313
+  ),
+  Full_model_AIC = c(
+    75313,
+    75313,
+    75313,
+    75313,
+    75313
+  ),
+  ChiSq = c(
+    42.167,
+    35.388,
+    14.139,
+    16.618,
+    6.170
+  ),
+  Df = c(3, 3, 3, 3, 3),
+  p = c(
+    "< .001",
+    "< .001",
+    .003,
+    "< .001",
+    .104
+  )
+)
+
+kable(
+  interaction_table,
+  digits = 3,
+  caption = "Model comparisons evaluating the contribution of age interactions."
+)
+```
+
+Comparison of the full interaction model with the main-effects model showed that including interactions improved model fit (Table 6), indicating that the effects of some predictors varied across development.
+Subsequent model comparisons showed that the interactions involving Word Frequency, Utterance Length, Word Concreteness Ratings, and Meaning Leverage each contributed uniquely to model fit and were therefore retained. In contrast, the interaction between age and Context Leverage did not improve model fit and was removed from the model.
+Consequently, the final model included age interactions for all predictors except Context Leverage, which was retained only as a main effect.
+
+
+## Results Final Model
+
+```{r}
+#| out-width: "99%"
+#| fig-cap: "Predicted probability of word acquisition across age as a function of key lexical and contextual predictors. Each panel shows model-predicted probabilities of word acquisition between 16 and 30 months derived from the final mixed-effects logistic regression model. The x-axis represents age in months and the y-axis represents the predicted probability of acquisition. Coloured lines compare low (25th percentile) and high (75th percentile) values of each predictor."
+
+# retrieve figures from folder 
+# Figures 
+
+knitr::include_graphics("figures/multi_panel_plot.png")
+```
+
+Figure 1 illustrates the patterns of word learning over time predicted by the final model. Across all panels, the probability of word acquisition increased with age, reflecting the overall growth of children's vocabularies between 16 and 30 months.
+
+The effect of Word Frequency varied across development. High-frequency words were consistently associated with a greater probability of acquisition than low-frequency words, but the size of this advantage changed across age. This finding suggests that the contribution of frequency to word learning is not constant throughout development.
+
+A similar pattern was observed for Utterance Length. Words occurring in shorter utterances showed a higher probability of acquisition than words occurring in longer utterances, and the magnitude of this difference varied across age. This suggests that simpler linguistic input may be particularly beneficial during certain stages of vocabulary development.
+
+Word Concreteness Ratings showed the largest difference between developmental trajectories. More concrete words were consistently associated with a greater probability of acquisition than more abstract words, although the strength of this effect also changed across development. This finding indicates that words referring to objects and concepts that children can readily perceive are acquired more easily than abstract words.
+
+Meaning Leverage also varied across development. Words that were more semantically similar to already known words showed a slightly greater probability of acquisition, suggesting that existing semantic knowledge may support the learning of new words. Although this effect was smaller than those observed for frequency and concreteness, it nevertheless contributed to vocabulary development.
+
+In contrast, words with higher Context Leverage were associated with a consistently greater probability of acquisition across the entire age range. Model comparisons did not support an interaction between context overlap and age, suggesting that the influence of Context Leverage remained relatively stable across development.
+
+Taken together, these findings indicate that all predictors contributed to children's word acquisition. However, the effects of Word Frequency, Utterance Length, Word Concreteness Ratings, and Meaning Leverage varied across development, whereas the effect of Context Leverage remained stable across age.
+
+
+# DISCUSSION 
+
+First, it added to the evidence that children's everyday linguistic input contributes to vocabulary acquisition, supporting the view that language input contains meaningful information for learning. Second, it examined whether one form of statistical information in children's linguistic environments—context leverage—predicts the probability that a child knows a word at a particular age.
+
+The present study addressed three central issues. First, it added to the evidence that children's everyday linguistic input contributes to vocabulary acquisition, supporting the view that language input contains meaningful information for learning. Second, it examined whether one form of statistical information in children's linguistic environments, context leverage, predicts the probability that a child knows a word at a particular age. The findings provide support for each of these questions. Context leverage significantly predicted vocabulary acquisition, and this relationship remained significant after controlling for established predictors, including word frequency, utterance length, word concreteness, and meaning leverage. 
+Furthermore, unlike the other predictors, the effect of context leverage remained stable across development, suggesting that contextual similarity provides a consistent source of support for vocabulary acquisition between 15 and 30 months of age. 
+By replicating the effects of established predictors while extending previous work to longitudinal child-level vocabulary data, the present study provides stronger evidence that children's everyday linguistic environments contain meaningful statistical information that supports vocabulary acquisition. More specifically, the findings suggest that relationships between words occurring in similar linguistic contexts provide information about word meaning that contributes to children's learning beyond simple exposure to individual words.
+
+## Future research 
+Although the present study provides further evidence that context leverage contributes to early vocabulary acquisition, it also raises several important questions that warrant future investigation.
+One important direction for future research is to examine whether the relationship between context leverage and vocabulary acquisition generalises across languages. The present study focused on English, but languages differ but languages differ substantially in the way words are ordered, how sentences are constructed, and the sounds that make up words. These differences may influence the linguistic contexts in which words occur and, consequently, the extent to which contextual similarity supports word learning. Replicating the present study using longitudinal vocabulary data from languages with different grammatical structures and sound systems would provide an important test of the generalisability of the findings. 
+
+Another important question for future research concerns the role of verbal working memory in children's ability to learn words from linguistic context. When children encounter a new word, useful clues about its meaning may appear earlier in the sentence or discourse. For example, after hearing, "The animal has a long neck, eats leaves, and lives on the African savannah. The giraffe is looking for food," a child may need to retain the earlier contextual information while linking it to the unfamiliar word giraffe. Verbal working memory may therefore support word learning by helping children maintain relevant contextual information long enough to infer the meaning of a new word. Consistent with this idea, Unger and Sloutsky (2024) demonstrated in adult participants that individuals with greater verbal working memory capacity were more successful at learning novel words from linguistic context, suggesting that maintaining contextual information in working memory facilitates the process of linking new words to their meanings. Whether the same relationship exists during early language development remains largely unknown. 
+Although previous studies have reported associations between working memory and children's vocabulary development, there are currently no well-established verbal working memory measures suitable for infants between approximately 15 and 30 months of age. Existing verbal tasks typically require children to understand spoken instructions and produce verbal responses, making them unsuitable for this age group. In contrast, several nonverbal working memory tasks have been successfully used with toddlers, such as the Working Memory for Locations task, in which children remember the location of a hidden object over short delays (Haden et al., 2011). However, because these tasks assess memory for spatial rather than linguistic information, they cannot directly address the role of verbal working memory in learning words from context. Developing reliable, age-appropriate measures of verbal working memory based on automatic responses, such as eye movements, looking time, or other implicit measures, would make it possible to investigate whether individual differences in working memory contribute to children's ability to learn words through context. Such work could provide important insights into the cognitive mechanisms underlying distributional learning during early development.
+
+Another promising area for future research would be to investigate the relationship between context leverage, word recognition, and word production using a longitudinal design combining eye-tracking and parent-reported vocabulary measures. Whereas the present study examined vocabulary acquisition through parent-reported word production, eye tracking provides a more direct measure of children's knowledge of word meanings by recording how quickly and accurately children look at a picture representing a spoken word after hearing it. Parent reports could then be used to measure when children begin producing those same words. Following children over time would make it possible to examine whether context leverage predicts not only earlier word production, but also earlier or more efficient word recognition
+Furthermore, combining eye-tracking measures of recognition with parent-reported production would allow researchers to investigate the developmental gap between understanding a word and producing it. 
+Future research could therefore examine whether words with greater context leverage are recognised earlier, produced earlier, or show a shorter time gap between recognising and producing them[LU3.1]. Such a design would provide a more detailed understanding of how contextual similarity supports vocabulary learning and could help separate the effects of context leverage on word knowledge from its effects on spoken language use.
+
+## Conclusion
+The present study investigated whether context leverage predicts longitudinal vocabulary acquisition during early childhood. Consistent with the distributional learning account, words with greater context leverage were more likely to be acquired, even after accounting for established predictors of vocabulary acquisition, including word frequency, utterance length, word concreteness, and meaning leverage. Furthermore, the effect of context leverage remained stable across development, suggesting that contextual similarity provides a consistent source of support for vocabulary learning between 15 and 30 months of age. Together, these findings provide further evidence that children's everyday language environments contain meaningful statistical information that supports vocabulary acquisition. More broadly, the results strengthen the view that children can exploit relationships between words occurring in similar linguistic contexts to acquire new vocabulary, highlighting context leverage as an important contributor to early language development and a promising avenue for future research.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Word Learning Outcome: Age of Acquisition
+
+
+## Corpus of Children’s Everyday Language
+
+
+## Context Leverage Metrics
+
+
+## Calculating Context Similarity: Context Overlap
+
+
+## CalculatingContextLeverage
+
+
+## Control Variables
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########   retrieve models from folder 
+
+```{r}
+#| warning: false
+#| message: false
+#| fig-width: 10
+#| fig-height: 8
+
+p_log_freq <- readRDS("models/mixed_log_reg.rds")
+
+```
+
+
+
+
+
+
+# Results
+
+## Standardise numeric predictors (z-scores)
+
+### Why
+Prior to statistical modelling, continuous predictor variables (log_freq, log_freq_final, utt_length, abcon, prop_same, and within_overlap) were standardised using z-score transformation. Standardisation placed predictors on a common scale, facilitating comparison of coefficient estimates across variables and improving model estimation.
+
+
+### TABLE FINAL DATA SET 
+```{r}
+
+### View final data set
+context_leverage_scale <- readRDS(
+  "final dataset/context_leverage_scale.rds"
+)
+context_leverage_scale
+```
+
+
+### How
+Following standardisation, only variables required for subsequent analyses were retained. Observations containing missing values were then removed so that all statistical models were fitted to a consistent dataset.
+
+
+
+## JUSTIFY MIXED EFFECTS MODELS
+
+### Why
+The dataset contained repeated observations for both children and words, violating the assumption of independence required by standard logistic regression. Mixed-effects models were therefore evaluated to determine whether accounting for child- and word-level variability improved model fit.
+
+
+### How
+To evaluate whether this, two logistic regression models were compared. The first was a standard logistic regression model including age as a fixed predictor of vocabulary acquisition probability. The second was a mixed-effects logistic regression model that additionally included random intercepts for both word and child identity, allowing baseline vocabulary acquisition probability to vary across children and lexical items.
+Model fit was compared using Akaike’s Information Criterion (AIC), with lower AIC values indicating better fit.
+
+
+### TABLE
+```{r}
+#| message: false
+#| warning: false
+
+# Table comparison: Standard logistic regression / Mixed-effects logistic regression
+
+aic_table <- data.frame(
+  Model = c("Standard logistic regression",
+            "Mixed-effects logistic regression"),
+  df = c(2, 4),
+  AIC = c(174471.04, 99536.73)
+)
+
+kable(
+  aic_table,
+  caption = "Comparison of model fit between standard logistic and mixed-effects logistic regression models."
+)
+```
+
+
+### Results
+The mixed-effects model provided a substantially better fit than the standard logistic regression model (Table X). Consequently, random intercepts for word and child identity were retained in all subsequent analyses.
+
+
+
+
+## JUSTIFY AGE AS NON LINEAR PREDICTOR
+
+### Why
+Vocabulary acquisition is unlikely to progress at a constant rate across age. Periods of rapid vocabulary growth may be followed by slower developmental change, meaning that the relationship between age and acquisition probability may not be linear. Therefore, it was necessary to determine whether age should be modelled as a linear or non-linear predictor. A non-linear representation allows developmental changes in acquisition probability to be captured more flexibly and may provide a better fit to the data.
+
+
+### How
+To evaluate this, two mixed-effects logistic regression models were compared. Both models retained random intercepts for word and child identity, but the first model used age as a linear predictor whether the other model used age as a non-linear predictor, allowing the relationship between age and word acquisition probability to vary non-linearly.
+The two models were compared AIC values. 
+
+
+### TABLE 
+```{r}
+#| result: true
+
+# Table comparison: Linear age / Non-linear age
+
+age_model_comparison <- data.frame(
+  Model = c("Linear age", "Non-linear age"),
+  Parameters = c(4, 6),
+  AIC = c(99537, 98236),
+  LogLik = c(-49764, -49112),
+  ChiSq = c(NA, 1304.9),
+  Df = c(NA, 2),
+  p = c(NA, "< .001")
+)
+
+kable(
+  age_model_comparison,
+  caption = "Comparison of linear and non-linear age models."
+)
+```
+
+
+### Results
+The non-linear age model provided a significantly better fit than the linear age model, as indicated by its lower AIC value and the significant likelihood ratio test (Table X). These results suggest that vocabulary acquisition follows a non-linear developmental trajectory rather than progressing at a constant rate across age. Consequently, the non-linear age model was retained for all subsequent analyses.
+
+
+## JUSTIFY WHICH VARIABLES INCLUDE (MAIN EFFECT)
+
+
+### Why
+The next step was to determine which predictor variables should be retained as main effects in the model. The predictors considered were word frequency (log_freq), utterance length (utt_length), concreteness (abcon), proportion of same-category words (prop_same), and context leverage (within_overlap). Although all predictors were theoretically motivated, some may provide little additional explanatory information once the effects of the other predictors are taken into account. This analysis identified the predictors that contributed uniquely to explaining variation in word acquisition probability while avoiding unnecessary model complexity.
+
+### How
+A baseline mixed-effects logistic regression model was first fitted including all predictor variables alongside the non-linear representation of age. Random intercepts for word and child identity were retained.
+A series of reduced models was then created by removing one predictor at a time from the baseline model. Each reduced model was compared against the baseline model using AIC values. Predictors were retained if their removal worsened model fit.
+
+
+### TABLE 
+```{r}
+#| result: false
+
+# Table comparison: all vars comparison
+
+main_effect_table <- data.frame(
+  Removed_predictor = c(
+    "log_freq",
+    "utt_length",
+    "abcon",
+    "prop_same",
+    "within_overlap"
+  ),
+  Reduced_model_AIC = c(
+    75495,
+    75486,
+    75508,
+    75411,
+    75414
+  ),
+  Full_model_AIC = c(
+    75402,
+    75402,
+    75402,
+    75402,
+    75402
+  ),
+  ChiSq = c(
+    94.96,
+    85.98,
+    108.15,
+    11.03,
+    14.74
+  ),
+  Df = c(1, 1, 1, 1, 1),
+  p = c(
+    "< .001",
+    "< .001",
+    "< .001",
+    "< .001",
+    "< .001"
+  )
+)
+
+kable(
+  main_effect_table,
+  caption = "Model comparisons testing the contribution of each main-effect predictor."
+)
+```
+
+
+### Results
+Comparison of the reduced models against the baseline model showed that removing any predictor worsened model fit, as indicated by its lower AIC value and the significant likelihood ratio test (Table X). These results indicate that word frequency, utterance length, concreteness, proportion of same-category words, and context leverage each contributed unique explanatory information about word acquisition probability. Consequently, all predictors were retained as main effects for the subsequent interaction analyses.
+
+
+
+## JUSTIFY WHICH VARIABLES WITH INTERACTION WITH AGE TO INCLUDE (INTERACTION)
+
+All interactions were first tested one at a time to determine whether the effect of each predictor changed across development. However, interactions that improve model fit when tested individually may not remain important when included together in the same model. Therefore, all interactions were carried forward into a full interaction model, which was used in the following section to identify the combination of interactions that provided the best fit to the data.
+
+## JUSTIFY COMBINATION OF INTERACTIONS
+
+### WHY
+The previous analyses showed that all interactions improved model fit when tested individually. The next step was to determine which interactions should be retained when considered together in the same model. This allowed identification of the combination of interactions that best explained developmental variation in word acquisition while avoiding unnecessary model complexity.
+
+
+### HOW
+A full mixed-effects model was fitted including all previously retained interactions, alongside non-linear age effects and random intercepts for word and child identity.
+
+Reduced models were then created by removing one interaction at a time. Each reduced model was compared with the full model using AIC values. Interactions were retained if their removal worsened model fit.
+
+### TABLE
+```{r}
+#| message: false
+#| warning: false
+
+library(knitr)
+
+interaction_table <- data.frame(
+  Removed_interaction = c(
+    "Age × log_freq",
+    "Age × utt_length",
+    "Age × abcon",
+    "Age × prop_same",
+    "Age × within_overlap"
+  ),
+  Reduced_model_AIC = c(
+    75349,
+    75342,
+    75321,
+    75324,
+    75313
+  ),
+  Full_model_AIC = c(
+    75313,
+    75313,
+    75313,
+    75313,
+    75313
+  ),
+  ChiSq = c(
+    42.167,
+    35.388,
+    14.139,
+    16.618,
+    6.170
+  ),
+  Df = c(3, 3, 3, 3, 3),
+  p = c(
+    "< .001",
+    "< .001",
+    .003,
+    "< .001",
+    .104
+  )
+)
+
+kable(
+  interaction_table,
+  digits = 3,
+  caption = "Model comparisons evaluating the contribution of age interactions."
+)
+```
+
+
+### RESULTS
+Comparison of the full interaction model with the main-effects model showed that including interactions improved model fit (Table X), indicating that the effects of some predictors varied across development.
+Subsequent model comparisons showed that the interactions involving log_freq, utt_length, abcon, and prop_same each contributed uniquely to model fit and were therefore retained. In contrast, the interaction between age and within_overlap did not improve model fit and was removed from the model.
+Consequently, the final model retained interactions between age and log_freq, utt_length, abcon, and prop_same, while within_overlap was retained only as a main effect.
+
+
+
+## RESULTS FINAL MODEL
+
+
+
+
+```{r}
+#| out-width: "90%"
+#| fig-cap: "Figure X. Predicted probability of word acquisition across age as a function of key lexical and contextual predictors. Each panel shows model-predicted probabilities of word acquisition between 16 and 30 months derived from the final mixed-effects logistic regression model. The x-axis represents age in months and the y-axis represents the predicted probability of acquisition. Coloured lines compare low (25th percentile) and high (75th percentile) values of each predictor."
+
+# retrieve figures from folder 
+# Figures 
+
+knitr::include_graphics("figures/multi_panel_plot.png")
+```
+Figure X illustrates the patterns of word learning over time predicted by the final model. Across all panels, the probability of word acquisition increased with age, reflecting the overall growth of children's vocabularies between 16 and 30 months.
+
+The effect of word frequency varied across development. High-frequency words were consistently associated with a greater probability of acquisition than low-frequency words, but the size of this advantage changed across age. This finding suggests that the contribution of frequency to word learning is not constant throughout development.
+
+A similar pattern was observed for utterance length. Words occurring in shorter utterances showed a higher probability of acquisition than words occurring in longer utterances, and the magnitude of this difference varied across age. This suggests that simpler linguistic input may be particularly beneficial during certain stages of vocabulary development.
+
+Concreteness showed the largest difference between developmental trajectories. More concrete words were consistently associated with a greater probability of acquisition than more abstract words, although the strength of this effect also changed across development. This finding indicates that words referring to objects and concepts that children can readily perceive are acquired more easily than abstract words.
+
+Semantic similarity also varied across development. Words that were more semantically similar to already known words showed a slightly greater probability of acquisition, suggesting that existing semantic knowledge may support the learning of new words. Although this effect was smaller than those observed for frequency and concreteness, it nevertheless contributed to vocabulary development.
+
+In contrast, words with higher context overlap were associated with a consistently greater probability of acquisition across the entire age range. Model comparisons did not support an interaction between context overlap and age, suggesting that the influence of context overlap remained relatively stable across development.
+
+Taken together, these findings indicate that word frequency, utterance length, concreteness, semantic similarity, and context overlap all contribute to children's word acquisition. However, the influence of frequency, utterance length, concreteness, and semantic similarity changed across development, whereas the effect of context overlap remained relatively stable across age.
+
+
+
+
+
+# General Discussion
+
+# Conclusion
