@@ -1,7 +1,7 @@
 ---
 title: "Context Leverage in Early Word Learning: A Logistic Regression Analysis"
 author: "Y3884968"
-date: "24 August 2026"
+date: "25 August 2026"
 date-format: "D MMMM YYYY"
 
 format:
@@ -59,10 +59,8 @@ Together, these computational models demonstrate that semantic representations c
 
 ### Neural Networks and Distributional Hypothesis
 Evidence for distributional learning also comes from recurrent neural networks (RNNs), first introduced by Elman (1990) as a computational model capable of learning sequential structure from linguistic input. Unlike earlier computational models that represented semantic relationships using patterns of word co-occurrence, RNNs process language one word at a time while retaining information about previous inputs, allowing them to learn sequential dependencies directly from linguistic experience (Elman, 1990; Pater, 2019). This enables RNNs to progressively acquire semantic word knowledge by detecting statistical regularities in language input.
-
 More recently, Piantadosi (2024) argued that modern large language models provide further evidence for this perspective. Trained to predict the next word from linguistic input, these models develop rich linguistic representations without explicit language-specific rules, demonstrating that complex language knowledge can emerge from statistical structure.
 
-### Overview of Distributional Hypothesis Evidence
 Collectively, these theoretical, empirical, and computational findings suggest that linguistic input may be substantially richer than assumed by strong versions of the poverty of the stimulus argument. Rather than viewing language as an impoverished source of information, distributional approaches propose that learners can exploit statistical regularities in the language they hear to construct increasingly rich semantic representations. The next question, therefore, is whether statistical information in the linguistic input actually drives vocabulary acquisition during development.
 
 
@@ -71,9 +69,7 @@ Collectively, these theoretical, empirical, and computational findings suggest t
 ### Established Predictors
 If statistical information in the language that children hear helps them learn words, then these characteristics should predict when words are acquired. Previous research has identified some characteristics of children's everyday language input that reliably predict vocabulary acquisition. These predictors provide evidence that properties of the linguistic input influence word learning.
 
-One of the most consistent predictors is word frequency. Braginsky et al. (2019) analysed vocabulary development across multiple languages and found that words occurring more frequently in children's language environments tend to be acquired earlier than less frequent words. Frequent exposure provides children with more opportunities to encounter individual words, making frequency one of the strongest and most reliable predictors of vocabulary acquisition across languages.
-
-Research has also shown that characteristics of the utterances in which words occur contribute to vocabulary acquisition. Swingley and Humphrey (2018) examined quantitative predictors of early word learning and found that words occurring more frequently and in shorter, less complex utterances tend to be learned earlier. 
+One of the most consistent predictors of vocabulary acquisition is word frequency. Braginsky et al. (2019) analysed vocabulary development across multiple languages and found that more frequent words tend to be acquired earlier, suggesting that greater exposure provides children with more opportunities to learn individual words. Characteristics of the utterances in which words occur also appear to influence acquisition. Swingley and Humphrey (2018) found that words occurring in shorter, less complex utterances tend to be learned earlier.
 
 These findings suggest that both the amount of exposure children receive and the linguistic environments in which words appear influence the timing of vocabulary acquisition. Together, they demonstrate that characteristics such as Word Frequency and Utterance Length explain a substantial proportion of the variation in the age at which words are acquired. However, these characteristics primarily describe how often words occur or the types of utterances in which they appear. They provide relatively little information about the meanings of words themselves or how children infer those meanings from language input. Consequently, researchers have increasingly turned their attention to characteristics of linguistic input that are informative about word meaning. One promising proposal is Context Leverage, which focuses on how relationships between words across similar linguistic contexts may facilitate vocabulary acquisition.
 
@@ -84,33 +80,26 @@ Context Leverage is grounded in the distributional hypothesis. If this principle
 #### Experimental Evidence for Learning from Linguistic Context
 Evidence that children can use contextual information during word learning comes from several experimental studies. 
 
-Yuan et al. (2011) demonstrated that children use familiar verbs to infer the meanings of unfamiliar nouns. For example, if a child knows that words such as *apple* and *orange* occur with *eat*, encountering a novel noun in the same context (e.g., *eat the mango*) may allow the child to infer that *mango* refers to something similar.
+Yuan et al. (2011) demonstrated that children use familiar verbs to infer the meanings of unfamiliar nouns. For example, if a child knows that words such as *apple* and *orange* occur with *eat*, encountering a novel noun in the same context (e.g., *eat the mango*) may allow the child to infer that *mango* refers to something similar. 
 
-Similarly, Sullivan and Barner (2016) showed that preschool children can infer novel word meanings from discourse context without direct cues to the intended meaning. For example, after hearing "I'm thirsty. Look! There's a pliff on the table," children inferred that *pliff* referred to the drink rather than the other available objects.
+Similarly, Sullivan and Barner (2016) showed that preschool children can infer novel word meanings from discourse context without direct cues to the intended meaning. For example, after hearing "I'm thirsty. Look! There's a pliff on the table," children inferred that *pliff* referred to the drink rather than the other available objects. 
 
 Ferguson et al. (2018) further demonstrated that toddlers can acquire novel words using linguistic context alone. After hearing "The vep is crying" without a visual referent, 24-month-old children inferred that *vep* referred to an unfamiliar animal because *crying* implies an animate subject.
 
 #### Naturalistic Evidence for Context Leverage
 Together, these studies demonstrate that children are capable of exploiting linguistic context to infer the meanings of unfamiliar words. However, most evidence comes from laboratory experiments involving a relatively small number of carefully controlled novel-word learning tasks. Consequently, it remains unclear whether the same principles operate during everyday vocabulary acquisition, where children encounter thousands of words across highly variable linguistic environments. To examine this question, Unger and James (2025) tested the Context Leverage hypothesis using naturalistic child-directed speech. They showed that words with greater Context Leverage tended to be acquired earlier in development, even after accounting for established predictors of Age of Acquisition.
 
-However, although Unger and James (2025) provided the first evidence that Context Leverage predicts vocabulary acquisition in naturalistic language input, an important limitation remains. Their analyses summarised vocabulary acquisition using a single Age of Acquisition estimate for each word. Although this approach identifies the approximate age at which a word is learned by the population, it does not show how vocabulary develops differently across children over time.
+However, although Unger and James (2025) provided evidence that Context Leverage predicts vocabulary acquisition in naturalistic language input, an important limitation remains. Their analyses summarised vocabulary acquisition using a single Age of Acquisition estimate for each word. Although this approach identifies the approximate age at which a word is learned by the population, it does not show how vocabulary develops differently across children over time.
 
 Vocabulary acquisition is inherently a longitudinal process. Children differ in the words they know at different ages, and new words are acquired gradually throughout development rather than at a single point in time. Consequently, modelling vocabulary acquisition at the level of individual child–word observations may provide a more detailed understanding of the factors that support word learning.
 
 It therefore remains unclear whether Context Leverage predicts the probability that an individual child knows a particular word at a given age after accounting for other established predictors of vocabulary acquisition.
 
 ## Present Study
-The present study addresses this gap by examining whether Context Leverage predicts longitudinal vocabulary acquisition during early childhood. 
-
-Rather than representing learning using a single Age of Acquisition estimate for each word, vocabulary acquisition was modelled using individual child–age–word observations from a longitudinal dataset in which children's vocabulary development was tracked over 14 months. This approach makes it possible to examine the probability that an individual child knows a particular word at a particular age.
-
-To investigate this question, the present study examined whether Context Leverage predicts vocabulary acquisition over the course of development, such that words are more likely to be learned when they occur in similar linguistic contexts to previously acquired words with related meanings. The principal predictor of interest was Context Leverage, while the analyses controlled for Word Frequency, Utterance Length, and other key predictors of word learning.
+The present study addresses this gap by examining whether Context Leverage predicts longitudinal vocabulary acquisition during early childhood. Rather than representing learning using a single Age of Acquisition estimate for each word, vocabulary acquisition was modelled using individual child–age–word observations from a longitudinal dataset in which children’s vocabulary development was tracked over 14 months. This approach makes it possible to examine the probability that an individual child knows a particular word at a particular age. Specifically, the study tested whether words are more likely to be learned when they occur in similar linguistic contexts to previously acquired words with related meanings.
 
 ### Hypotheses
 Based on previous theoretical and empirical work, it was hypothesised that words with higher Context Leverage would have a greater probability of being acquired. Furthermore, this relationship was expected to remain significant after controlling for Word Frequency, Utterance Length, and other characteristics known to affect word learning.
-
-
-
 
 
 # METHODS
@@ -380,14 +369,14 @@ interaction_table <- data.frame(
     "Age × Meaning Leverage",
     "Age × Context Leverage"
   ),
-  Reduced_model_AIC = c(
+  Reduced_mod_AIC = c(
     75349,
     75342,
     75321,
     75324,
     75313
   ),
-  Full_model_AIC = c(
+  Full_mod_AIC = c(
     75313,
     75313,
     75313,
@@ -453,18 +442,25 @@ Taken together, these findings indicate that all predictors were associated with
 # DISCUSSION 
 
 The present study addressed two central issues. First, it added to the evidence that children's everyday linguistic input contributes to vocabulary acquisition, supporting the view that language input contains meaningful information for learning. Second, it examined whether one form of statistical information in children's linguistic environments, Context Leverage, predicts the probability that a child knows a word at a particular age. The findings provide support for both propositions. Context Leverage significantly predicted vocabulary acquisition, and this relationship remained significant after controlling for established predictors, including Word Frequency, Utterance Length, Word Concreteness, and Meaning Leverage. 
+
 Furthermore, unlike the other predictors, the effect of Context Leverage remained stable across development, suggesting that contextual similarity provides a consistent source of support for vocabulary acquisition between 16 and 30 months of age. 
+
 By replicating the effects of established predictors while extending previous work to longitudinal child-level vocabulary data, the present study provides stronger evidence that children's everyday linguistic environments contain meaningful statistical information that supports vocabulary acquisition. More specifically, the findings suggest that relationships between words occurring in similar linguistic contexts provide information about word meaning that contributes to children's learning beyond simple exposure to individual words.
 
 ## Future Research 
 Although the present study provides further evidence that Context Leverage contributes to early vocabulary acquisition, it also raises several important questions that warrant future investigation.
+
 One important direction for future research is to examine whether the relationship between Context Leverage and vocabulary acquisition generalises across languages. The present study focused on English, but languages differ substantially in the way words are ordered, how sentences are constructed, and the sounds that make up words. These differences may influence the linguistic contexts in which words occur and, consequently, the extent to which contextual similarity supports word learning. Replicating the present study using longitudinal vocabulary data from languages with different grammatical structures and sound systems would provide an important test of the generalisability of the findings. 
 
 Another important question for future research concerns the role of verbal working memory in children's ability to learn words from linguistic context. When children encounter a new word, useful clues about its meaning may appear earlier in the sentence or discourse. For example, after hearing, *"The animal has a long neck, eats leaves, and lives on the African savannah. The giraffe is looking for food,"* a child may need to retain the earlier contextual information while linking it to the unfamiliar word *giraffe*. Verbal working memory may therefore support word learning by helping children maintain relevant contextual information long enough to infer the meaning of a new word. Consistent with this idea, Unger and Sloutsky (2024) demonstrated in adult participants that individuals with greater verbal working memory capacity were more successful at learning novel words from linguistic context, suggesting that maintaining contextual information in working memory facilitates the process of linking new words to their meanings. Whether the same relationship exists during early language development remains largely unknown. 
-Although previous studies have reported associations between working memory and children's vocabulary development, there are currently no well-established verbal working memory measures suitable for children between approximately 16 and 30 months of age. Existing verbal tasks typically require children to understand spoken instructions and produce verbal responses, making them unsuitable for this age group. In contrast, several nonverbal working memory tasks have been successfully used with toddlers, such as the *Working Memory for Locations* task, in which children remember the location of a hidden object over short delays (Haden et al., 2011). However, because these tasks assess memory for spatial rather than linguistic information, they cannot directly address the role of verbal working memory in learning words from context. Developing reliable, age-appropriate measures of verbal working memory based on automatic responses, such as eye movements, looking time, or other implicit measures, would make it possible to investigate whether individual differences in working memory contribute to children's ability to learn words through context. Such work could provide important insights into the cognitive mechanisms underlying distributional learning during early development.
+
+Although previous studies have reported associations between working memory and children's vocabulary development, there are currently no well-established verbal working memory measures suitable for children between approximately 16 and 30 months of age. Existing verbal tasks typically require children to understand spoken instructions and produce verbal responses, making them unsuitable for this age group. In contrast, several nonverbal working memory tasks have been successfully used with toddlers, such as the *Working Memory for Locations* task, in which children remember the location of a hidden object over short delays (Haden et al., 2011). 
+
+However, because these tasks assess memory for spatial rather than linguistic information, they cannot directly address the role of verbal working memory in learning words from context. Developing reliable, age-appropriate measures of verbal working memory based on automatic responses, such as eye movements, looking time, or other implicit measures, would make it possible to investigate whether individual differences in working memory contribute to children's ability to learn words through context. Such work could provide important insights into the cognitive mechanisms underlying distributional learning during early development.
 
 Another promising area for future research would be to investigate the relationship between Context Leverage, word recognition, and word production using a longitudinal design combining eye-tracking and parent-reported vocabulary measures. Whereas the present study examined vocabulary acquisition through parent-reported word production, eye-tracking provides a more direct measure of children's knowledge of word meanings by recording how quickly and accurately children look at a picture representing a spoken word after hearing it. Parent reports could then be used to measure when children begin producing those same words. Following children over time would make it possible to examine whether Context Leverage predicts not only earlier word production, but also earlier or more efficient word recognition.
 Furthermore, combining eye-tracking measures of recognition with parent-reported production would allow researchers to investigate the developmental gap between understanding a word and producing it. 
+
 Future research could therefore examine whether words with greater Context Leverage are recognised earlier, produced earlier, or show a shorter time gap between recognising and producing them. Such a design would provide a more detailed understanding of how contextual similarity supports vocabulary learning and could help separate the effects of Context Leverage on word knowledge from its effects on spoken language use.
 
 ## Conclusion
